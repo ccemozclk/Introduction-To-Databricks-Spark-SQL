@@ -1,0 +1,1215 @@
+{
+  "datasets": [
+    {
+      "name": "946d985f",
+      "displayName": "DemographicalGraphs",
+      "queryLines": [
+        "SELECT \r\n",
+        "        HR.DEPARTMENT,\r\n",
+        "        /*HR.JOBROLE,\r\n",
+        "        (CASE\r\n",
+        "                WHEN HR.AGE < 25 THEN '18-24'\r\n",
+        "                WHEN HR.AGE BETWEEN 25 AND 34 THEN '25-34'\r\n",
+        "                WHEN HR.AGE BETWEEN 35 AND 44 THEN '35-44'\r\n",
+        "                WHEN HR.AGE BETWEEN 45 AND 54 THEN '45-54'\r\n",
+        "                ELSE '55+'\r\n",
+        "        END) AS AgeGroup,*/\r\n",
+        "        ROUND(\r\n",
+        "                CAST(SUM(CASE WHEN HR.ATTRITION = 'Yes' THEN 1 ELSE 0 END) AS REAL) \r\n",
+        "                / COUNT(*),\r\n",
+        "        2) AttRatio\r\n",
+        "\r\n",
+        "        FROM workspace.default.ibm_hr HR\r\n",
+        "        GROUP BY HR.DEPARTMENT--,HR.JOBROLE,AgeGroup"
+      ]
+    },
+    {
+      "name": "53e6e1fb",
+      "displayName": "CardValues",
+      "queryLines": [
+        "SELECT  \r\n",
+        "        COUNT(*) AS Total_Employees,\r\n",
+        "        \r\n",
+        "        SUM(CASE WHEN HR.ATTRITION = 'Yes' THEN 1 ELSE 0 END) AS Total_Attrition_Yes,\r\n",
+        "\r\n",
+        "        ROUND(\r\n",
+        "        CAST(SUM(CASE WHEN HR.ATTRITION = 'Yes' THEN 1 ELSE 0 END) AS REAL) \r\n",
+        "        / COUNT(*),\r\n",
+        "        2\r\n",
+        "    ) AS Attrition_Rate_Percentage\r\n",
+        "        FROM workspace.default.ibm_hr HR"
+      ]
+    },
+    {
+      "name": "227eec53",
+      "displayName": "OverTimeAtt",
+      "queryLines": [
+        "SELECT \r\n",
+        "        HR.OVERTIME,\r\n",
+        "        \r\n",
+        "        ROUND(\r\n",
+        "                CAST(SUM(CASE WHEN HR.ATTRITION = 'Yes' THEN 1 ELSE 0 END) AS REAL) \r\n",
+        "                / COUNT(*),\r\n",
+        "        2) AttRatio\r\n",
+        "        FROM workspace.default.ibm_hr HR\r\n",
+        "        GROUP BY HR.OVERTIME"
+      ]
+    },
+    {
+      "name": "21cdfbb6",
+      "displayName": "BusinessTravelAtt",
+      "queryLines": [
+        "SELECT \r\n",
+        "        REPLACE(HR.BUSINESSTRAVEL, '_', ' ') AS BusinessTravel,\r\n",
+        "        \r\n",
+        "        ROUND(\r\n",
+        "                CAST(SUM(CASE WHEN HR.ATTRITION = 'Yes' THEN 1 ELSE 0 END) AS REAL) \r\n",
+        "                / COUNT(*),\r\n",
+        "        2) AttRatio\r\n",
+        "        FROM workspace.default.ibm_hr HR\r\n",
+        "        GROUP BY HR.BUSINESSTRAVEL"
+      ]
+    },
+    {
+      "name": "48525da8",
+      "displayName": "JobRoleAtt",
+      "queryLines": [
+        "SELECT \r\n",
+        "        \r\n",
+        "        HR.JOBROLE,\r\n",
+        "       /* (CASE\r\n",
+        "                WHEN HR.AGE < 25 THEN '18-24'\r\n",
+        "                WHEN HR.AGE BETWEEN 25 AND 34 THEN '25-34'\r\n",
+        "                WHEN HR.AGE BETWEEN 35 AND 44 THEN '35-44'\r\n",
+        "                WHEN HR.AGE BETWEEN 45 AND 54 THEN '45-54'\r\n",
+        "                ELSE '55+'\r\n",
+        "        END) AS AgeGroup,*/\r\n",
+        "        ROUND(\r\n",
+        "                CAST(SUM(CASE WHEN HR.ATTRITION = 'Yes' THEN 1 ELSE 0 END) AS REAL) \r\n",
+        "                / COUNT(*),\r\n",
+        "        2) AttRatio\r\n",
+        "\r\n",
+        "        FROM workspace.default.ibm_hr HR\r\n",
+        "        GROUP BY HR.JOBROLE"
+      ]
+    },
+    {
+      "name": "32d7fe18",
+      "displayName": "AgeRatioAtt",
+      "queryLines": [
+        "SELECT \r\n",
+        "        HR.ATTRITION,\r\n",
+        "        HR.AGE\r\n",
+        "        \r\n",
+        "\r\n",
+        "        FROM workspace.default.ibm_hr HR\r\n",
+        "       "
+      ]
+    },
+    {
+      "name": "d5351182",
+      "displayName": "JobSatisfactionAtt",
+      "queryLines": [
+        "SELECT \r\n",
+        "        HR.JOBSATISFACTION,\r\n",
+        "        SUM(ROUND(CAST(SUM(CASE WHEN HR.ATTRITION = 'Yes' THEN 1 ELSE 0 END) AS REAL) / COUNT(*),2) ) OVER(PARTITION BY HR.JOBSATISFACTION) AttRatioJS\r\n",
+        "FROM workspace.default.ibm_hr HR\r\n",
+        "GROUP BY HR.JOBSATISFACTION"
+      ]
+    },
+    {
+      "name": "955a9454",
+      "displayName": "MonthlyIncomeValues",
+      "queryLines": [
+        "SELECT \r\n",
+        "        HR.MonthlyIncome,\r\n",
+        "        HR.Attrition\r\n",
+        "FROM workspace.default.ibm_hr HR\r\n"
+      ]
+    },
+    {
+      "name": "55a22e09",
+      "displayName": "YearsWithAtt",
+      "queryLines": [
+        "SELECT \r\n",
+        "       CASE WHEN HR.YearsAtCompany < 5 THEN '0-5'\r\n",
+        "              WHEN HR.YearsAtCompany BETWEEN 5 AND 10 THEN '5-10'\r\n",
+        "              WHEN HR.YearsAtCompany BETWEEN 10 AND 20 THEN '10-20'\r\n",
+        "              WHEN HR.YearsAtCompany BETWEEN 20 AND 30 THEN '20-30'\r\n",
+        "              WHEN HR.YearsAtCompany BETWEEN 30 AND 40 THEN '30-40'\r\n",
+        "              WHEN HR.YearsAtCompany > 40 THEN '40+'\r\n",
+        "              ELSE NULL END AS YearsAtCompany,\r\n",
+        "\r\n",
+        "       ROUND(\r\n",
+        "                CAST(SUM(CASE WHEN HR.ATTRITION = 'Yes' THEN 1 ELSE 0 END) AS REAL) \r\n",
+        "                / COUNT(*),\r\n",
+        "        2) AttRatio\r\n",
+        "      \r\n",
+        "       /*HR.YearsWithCurrManager,\r\n",
+        "       SUM(ROUND(CAST(SUM(CASE WHEN HR.ATTRITION = 'Yes' THEN 1 ELSE 0 END) AS REAL) / COUNT(*),2) ) OVER(PARTITION BY HR.YearsAtCompany) AttRatioYearsAtComp,\r\n",
+        "       SUM(ROUND(CAST(SUM(CASE WHEN HR.ATTRITION = 'Yes' THEN 1 ELSE 0 END) AS REAL) / COUNT(*),2) ) OVER(PARTITION BY HR.YearsWithCurrManager) AttRatioYearsAtMan*/\r\n",
+        "FROM workspace.default.ibm_hr HR\r\n",
+        "GROUP BY YearsAtCompany\r\n",
+        "\r\n",
+        "\r\n"
+      ]
+    },
+    {
+      "name": "8515a895",
+      "displayName": "YearsWithManager",
+      "queryLines": [
+        "SELECT \r\n",
+        "       CASE WHEN HR.YearsWithCurrManager < 3 THEN '0-3'\r\n",
+        "              WHEN HR.YearsWithCurrManager BETWEEN 3 AND 5 THEN '3-5'\r\n",
+        "              WHEN HR.YearsWithCurrManager BETWEEN 5 AND 10 THEN '5-10'\r\n",
+        "              WHEN HR.YearsWithCurrManager BETWEEN 10 AND 15 THEN '10-15'\r\n",
+        "              WHEN HR.YearsWithCurrManager > 15 THEN '15+'\r\n",
+        "              ELSE NULL END AS YearsWithCurrManager,\r\n",
+        "       ROUND(\r\n",
+        "                CAST(SUM(CASE WHEN HR.ATTRITION = 'Yes' THEN 1 ELSE 0 END) AS REAL) \r\n",
+        "                / COUNT(*),\r\n",
+        "        2) AttRatio\r\n",
+        "       \r\n",
+        "FROM workspace.default.ibm_hr HR\r\n",
+        "GROUP BY YearsWithCurrManager\r\n",
+        "\r\n",
+        "\r\n"
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "name": "8e1c9808",
+      "displayName": "HR Dashboard",
+      "layout": [
+        {
+          "widget": {
+            "name": "fedff4f6",
+            "multilineTextboxSpec": {
+              "lines": [
+                "# <span style=\"color: #077A9D;font-family: Arial;\">IBM Attrition Analysis Dashboard</span>"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 6,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "861a1c1a",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "53e6e1fb",
+                  "fields": [
+                    {
+                      "name": "Total_Employees",
+                      "expression": "`Total_Employees`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "Total_Employees",
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "none",
+                    "decimalPlaces": {
+                      "type": "all"
+                    },
+                    "hideGroupSeparator": false
+                  },
+                  "style": {
+                    "fontSize": 16,
+                    "bold": true,
+                    "color": {
+                      "themeColorType": "visualizationColors",
+                      "position": 3
+                    },
+                    "rules": [
+                      {
+                        "condition": {
+                          "operator": ">="
+                        },
+                        "color": "#00A972"
+                      }
+                    ]
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Total Employee Count"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 2,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "25bee107",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "53e6e1fb",
+                  "fields": [
+                    {
+                      "name": "sum(Total_Attrition_Yes)",
+                      "expression": "SUM(`Total_Attrition_Yes`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(Total_Attrition_Yes)",
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "none",
+                    "decimalPlaces": {
+                      "type": "all"
+                    },
+                    "hideGroupSeparator": false
+                  },
+                  "style": {
+                    "fontSize": 16,
+                    "bold": true,
+                    "color": {
+                      "themeColorType": "visualizationColors",
+                      "position": 4
+                    },
+                    "rules": [
+                      {
+                        "condition": {
+                          "operator": ">="
+                        },
+                        "color": "#00A972"
+                      }
+                    ]
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Employee Count Has Attrition"
+              }
+            }
+          },
+          "position": {
+            "x": 2,
+            "y": 2,
+            "width": 2,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "300d5847",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "53e6e1fb",
+                  "fields": [
+                    {
+                      "name": "sum(Attrition_Rate_Percentage)",
+                      "expression": "SUM(`Attrition_Rate_Percentage`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(Attrition_Rate_Percentage)",
+                  "format": {
+                    "type": "number-percent",
+                    "decimalPlaces": {
+                      "type": "all"
+                    },
+                    "hideGroupSeparator": false
+                  },
+                  "style": {
+                    "fontSize": 16,
+                    "bold": true,
+                    "color": {
+                      "themeColorType": "visualizationColors",
+                      "position": 4
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Attrition Rate (%)"
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 2,
+            "width": 2,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "e2d5f116",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "946d985f",
+                  "fields": [
+                    {
+                      "name": "DEPARTMENT",
+                      "expression": "`DEPARTMENT`"
+                    },
+                    {
+                      "name": "sum(AttRatio)",
+                      "expression": "SUM(`AttRatio`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "DEPARTMENT",
+                  "displayName": "Department",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "y-reversed"
+                    }
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(AttRatio)",
+                  "format": {
+                    "type": "number-percent",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  },
+                  "axis": {
+                    "title": "Attrition Ratio"
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "DEPARTMENT",
+                  "legend": {
+                    "position": "top",
+                    "hideTitle": true
+                  },
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "custom-order",
+                      "orderedValues": [
+                        "Human Resources",
+                        "Research & Development",
+                        "Sales"
+                      ]
+                    }
+                  }
+                },
+                "label": {
+                  "show": true
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Attrition Ratio By Department"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 4,
+            "width": 2,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "c4255b85",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "48525da8",
+                  "fields": [
+                    {
+                      "name": "JOBROLE",
+                      "expression": "`JOBROLE`"
+                    },
+                    {
+                      "name": "sum(AttRatio)",
+                      "expression": "SUM(`AttRatio`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "funnel",
+              "encodings": {
+                "x": {
+                  "fieldName": "sum(AttRatio)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "format": {
+                    "type": "number-percent",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  },
+                  "displayName": "Attrition Ratio"
+                },
+                "y": {
+                  "fieldName": "JOBROLE",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "x-reversed"
+                    }
+                  }
+                },
+                "color": {
+                  "fieldName": "JOBROLE",
+                  "legend": {
+                    "hide": true
+                  },
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "label": {
+                  "show": true
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Attrition Ratio By Job Role"
+              }
+            }
+          },
+          "position": {
+            "x": 2,
+            "y": 4,
+            "width": 2,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "4839b793",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "32d7fe18",
+                  "fields": [
+                    {
+                      "name": "ATTRITION",
+                      "expression": "`ATTRITION`"
+                    },
+                    {
+                      "name": "min(AGE)",
+                      "expression": "MIN(`AGE`)"
+                    },
+                    {
+                      "name": "q1(AGE)",
+                      "expression": "PERCENTILE(`AGE`, 0.25)"
+                    },
+                    {
+                      "name": "median(AGE)",
+                      "expression": "MEDIAN(`AGE`)"
+                    },
+                    {
+                      "name": "q3(AGE)",
+                      "expression": "PERCENTILE(`AGE`, 0.75)"
+                    },
+                    {
+                      "name": "max(AGE)",
+                      "expression": "MAX(`AGE`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "box",
+              "encodings": {
+                "x": {
+                  "fieldName": "ATTRITION",
+                  "displayName": "Attrition Status",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "whiskerStart": {
+                    "fieldName": "min(AGE)"
+                  },
+                  "boxStart": {
+                    "fieldName": "q1(AGE)"
+                  },
+                  "boxMid": {
+                    "fieldName": "median(AGE)"
+                  },
+                  "boxEnd": {
+                    "fieldName": "q3(AGE)"
+                  },
+                  "whiskerEnd": {
+                    "fieldName": "max(AGE)"
+                  },
+                  "axis": {
+                    "title": "Age Values"
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Attrition Ratio By Age Group"
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 4,
+            "width": 2,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "5b5525af",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "227eec53",
+                  "fields": [
+                    {
+                      "name": "OVERTIME",
+                      "expression": "`OVERTIME`"
+                    },
+                    {
+                      "name": "sum(AttRatio)",
+                      "expression": "SUM(`AttRatio`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "OVERTIME",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "y-reversed"
+                    }
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(AttRatio)",
+                  "format": {
+                    "type": "number-percent",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "OVERTIME",
+                  "legend": {
+                    "hide": true
+                  },
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "label": {
+                  "show": true
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Attrition Rate By Over Time"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 10,
+            "width": 2,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "38dfe742",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "21cdfbb6",
+                  "fields": [
+                    {
+                      "name": "BusinessTravel",
+                      "expression": "`BusinessTravel`"
+                    },
+                    {
+                      "name": "sum(AttRatio)",
+                      "expression": "SUM(`AttRatio`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "BusinessTravel",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "custom-order",
+                      "orderedValues": [
+                        "Travel Frequently",
+                        "Travel Rarely",
+                        "Non-Travel"
+                      ]
+                    }
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(AttRatio)",
+                  "format": {
+                    "type": "number-percent",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  },
+                  "displayName": "Attrition Ratio",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "BusinessTravel",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "label": {
+                  "show": true
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Attrition Ratio By Business Travel Status"
+              }
+            }
+          },
+          "position": {
+            "x": 2,
+            "y": 10,
+            "width": 2,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "3f2e9951",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "d5351182",
+                  "fields": [
+                    {
+                      "name": "JOBSATISFACTION",
+                      "expression": "`JOBSATISFACTION`"
+                    },
+                    {
+                      "name": "sum(AttRatioJS)",
+                      "expression": "SUM(`AttRatioJS`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "JOBSATISFACTION",
+                  "displayName": "Job Satisfaction",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(AttRatioJS)",
+                  "format": {
+                    "type": "number-percent",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  },
+                  "displayName": "Attrition Ratio",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "JOBSATISFACTION",
+                  "legend": {
+                    "hide": true
+                  },
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "label": {
+                  "show": true
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Attrition Ratio By Job Satisfaction"
+              },
+              "mark": {
+                "colors": [
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 2
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 3
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 5
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 7
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 8
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 9
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 10
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 10,
+            "width": 2,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "8a1a1a08",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "955a9454",
+                  "fields": [
+                    {
+                      "name": "Attrition",
+                      "expression": "`Attrition`"
+                    },
+                    {
+                      "name": "min(MonthlyIncome)",
+                      "expression": "MIN(`MonthlyIncome`)"
+                    },
+                    {
+                      "name": "q1(MonthlyIncome)",
+                      "expression": "PERCENTILE(`MonthlyIncome`, 0.25)"
+                    },
+                    {
+                      "name": "median(MonthlyIncome)",
+                      "expression": "MEDIAN(`MonthlyIncome`)"
+                    },
+                    {
+                      "name": "q3(MonthlyIncome)",
+                      "expression": "PERCENTILE(`MonthlyIncome`, 0.75)"
+                    },
+                    {
+                      "name": "max(MonthlyIncome)",
+                      "expression": "MAX(`MonthlyIncome`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "box",
+              "encodings": {
+                "x": {
+                  "fieldName": "Attrition",
+                  "displayName": "Attrition Status",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "whiskerStart": {
+                    "fieldName": "min(MonthlyIncome)"
+                  },
+                  "boxStart": {
+                    "fieldName": "q1(MonthlyIncome)"
+                  },
+                  "boxMid": {
+                    "fieldName": "median(MonthlyIncome)"
+                  },
+                  "boxEnd": {
+                    "fieldName": "q3(MonthlyIncome)"
+                  },
+                  "whiskerEnd": {
+                    "fieldName": "max(MonthlyIncome)"
+                  },
+                  "axis": {
+                    "title": "Monthly Income Values"
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "none",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Monthly Income Values By Attrition Status"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 16,
+            "width": 2,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "c02d5827",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "55a22e09",
+                  "fields": [
+                    {
+                      "name": "YearsAtCompany",
+                      "expression": "`YearsAtCompany`"
+                    },
+                    {
+                      "name": "min(AttRatio)",
+                      "expression": "MIN(`AttRatio`)"
+                    },
+                    {
+                      "name": "q1(AttRatio)",
+                      "expression": "PERCENTILE(`AttRatio`, 0.25)"
+                    },
+                    {
+                      "name": "median(AttRatio)",
+                      "expression": "MEDIAN(`AttRatio`)"
+                    },
+                    {
+                      "name": "q3(AttRatio)",
+                      "expression": "PERCENTILE(`AttRatio`, 0.75)"
+                    },
+                    {
+                      "name": "max(AttRatio)",
+                      "expression": "MAX(`AttRatio`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "box",
+              "encodings": {
+                "x": {
+                  "fieldName": "YearsAtCompany",
+                  "displayName": "Years At Company",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "custom-order",
+                      "orderedValues": [
+                        "0-5",
+                        "5-10",
+                        "10-20",
+                        "20-30",
+                        "30-40"
+                      ]
+                    }
+                  }
+                },
+                "y": {
+                  "whiskerStart": {
+                    "fieldName": "min(AttRatio)"
+                  },
+                  "boxStart": {
+                    "fieldName": "q1(AttRatio)"
+                  },
+                  "boxMid": {
+                    "fieldName": "median(AttRatio)"
+                  },
+                  "boxEnd": {
+                    "fieldName": "q3(AttRatio)"
+                  },
+                  "whiskerEnd": {
+                    "fieldName": "max(AttRatio)"
+                  },
+                  "axis": {
+                    "title": "Attrition"
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "format": {
+                    "type": "number-percent",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Attrition Ratio By Years At Company Category"
+              }
+            }
+          },
+          "position": {
+            "x": 2,
+            "y": 16,
+            "width": 2,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "4cad2283",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "8515a895",
+                  "fields": [
+                    {
+                      "name": "YearsWithCurrManager",
+                      "expression": "`YearsWithCurrManager`"
+                    },
+                    {
+                      "name": "min(AttRatio)",
+                      "expression": "MIN(`AttRatio`)"
+                    },
+                    {
+                      "name": "q1(AttRatio)",
+                      "expression": "PERCENTILE(`AttRatio`, 0.25)"
+                    },
+                    {
+                      "name": "median(AttRatio)",
+                      "expression": "MEDIAN(`AttRatio`)"
+                    },
+                    {
+                      "name": "q3(AttRatio)",
+                      "expression": "PERCENTILE(`AttRatio`, 0.75)"
+                    },
+                    {
+                      "name": "max(AttRatio)",
+                      "expression": "MAX(`AttRatio`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "box",
+              "encodings": {
+                "x": {
+                  "fieldName": "YearsWithCurrManager",
+                  "displayName": "Years At Company",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "custom-order",
+                      "orderedValues": [
+                        "0-3",
+                        "3-5",
+                        "5-10",
+                        "10-15",
+                        "15+"
+                      ]
+                    }
+                  }
+                },
+                "y": {
+                  "whiskerStart": {
+                    "fieldName": "min(AttRatio)"
+                  },
+                  "boxStart": {
+                    "fieldName": "q1(AttRatio)"
+                  },
+                  "boxMid": {
+                    "fieldName": "median(AttRatio)"
+                  },
+                  "boxEnd": {
+                    "fieldName": "q3(AttRatio)"
+                  },
+                  "whiskerEnd": {
+                    "fieldName": "max(AttRatio)"
+                  },
+                  "axis": {
+                    "title": "Attrition Rate"
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "format": {
+                    "type": "number-percent",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Attrition Ratio By Years At Company Category"
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 16,
+            "width": 2,
+            "height": 6
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}
